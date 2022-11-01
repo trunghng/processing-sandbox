@@ -1,11 +1,12 @@
 Car car;
 float d = 25;
 char prevKey = ' ';
+FlowField field;
 
 void setup() {
   size(640, 480);
   car = new Car(width/2, height/2);
-
+  field = new FlowField();
 }
 
 PVector drawMouse() {
@@ -42,20 +43,27 @@ void avoidWallSteering() {
   car.run();
 }
 
+void followFlowField() {
+  car.follow(field);
+  car.run();
+}
+
 void draw() {
   background(255);
-  
   if (key == '1') {
     seekSteering();
     prevKey = key;
   } else if (key == '2') {
     arriveSteering();
     prevKey = key;
-  } else {
+  } else if (key == '3') {
     if (prevKey != key) {
       car.resetVelocity();
     }
     avoidWallSteering();
+    prevKey = key;
+  } else {
+    followFlowField();
     prevKey = key;
   }
 }

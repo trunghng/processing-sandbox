@@ -43,6 +43,7 @@ class Car {
     steering(desired);
   }
   
+  // Avoid walls steering
   void avoidWall() {
     PVector desired = null;
     if (location.x < d) {
@@ -61,6 +62,13 @@ class Car {
       desired.normalize().mult(maxSpeed);
       steering(desired);
     }
+  }
+  
+  // flow-field following
+  void follow(FlowField flow) {
+    PVector desired = flow.lookup(location);
+    desired.mult(maxSpeed);
+    steering(desired);
   }
   
   void steering(PVector desired) {
