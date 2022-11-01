@@ -71,6 +71,35 @@ class Car {
     steering(desired);
   }
   
+  void follow(Path path) {
+    PVector predict = velocity.copy();
+    predict.normalize().mult(25);
+    PVector predictLoc = PVector.add(location, predict);
+    
+    PVector a = path.start;
+    PVector b = path.end;
+    PVector predictProjectedPt = getProjectedPt(predictLoc, a, b);
+    
+    PVector direction = PVector.sub(b, a);
+    direction.normalize().mult(10);
+    PVector target = PVector.add(predictProjectedPt, direction);
+    
+    float distance = PVector.dist(predictLoc, predictProjectedPt);
+    if (distance > path.radius) {
+      seek(target);
+    }
+    
+  }
+  
+  PVector getProjectedPt(PVector p, PVector a, PVector b) {
+    PVector ap = PVector.sub(p, a);
+    PVector ab = PVector.sub(b, a);
+    ab.normalize();
+    ab.mult(ap.dot(ab));
+    PVector projPt = PVector.add(a, ab);
+    return projPt;
+  }
+  
   void steering(PVector desired) {
     PVector steer = PVector.sub(desired, velocity);
     steer.limit(maxForce);

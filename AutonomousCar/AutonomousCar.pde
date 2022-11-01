@@ -2,11 +2,13 @@ Car car;
 float d = 25;
 char prevKey = ' ';
 FlowField field;
+Path path;
 
 void setup() {
   size(640, 480);
   car = new Car(width/2, height/2);
   field = new FlowField();
+  path = new Path();
 }
 
 PVector drawMouse() {
@@ -48,6 +50,12 @@ void followFlowField() {
   car.run();
 }
 
+void followPath() {
+  path.display();
+  car.follow(path);
+  car.run();
+}
+
 void draw() {
   background(255);
   if (key == '1') {
@@ -62,8 +70,11 @@ void draw() {
     }
     avoidWallSteering();
     prevKey = key;
-  } else {
+  } else if (key == '4'){
     followFlowField();
+    prevKey = key;
+  } else {
+    followPath();
     prevKey = key;
   }
 }
