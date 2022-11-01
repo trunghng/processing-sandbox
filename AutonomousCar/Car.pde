@@ -6,14 +6,19 @@ class Car {
   float maxForce;
 
   float r;
+  final PVector v = new PVector(-6, 3);
 
   Car(float x, float y) {
     location = new PVector(x, y);
-    velocity = new PVector(-6, 3);
+    velocity = v.copy();
     acceleration = new PVector(0, 0);
     maxSpeed = 3;
     maxForce = 0.1;
     r = 4;
+  }
+  
+  void resetVelocity() {
+    velocity = v.copy();
   }
 
   // Seek steering
@@ -66,6 +71,11 @@ class Car {
 
   void applyForce(PVector force) {
     acceleration.add(force);
+  }
+  
+  void run() {
+    update();
+    display();
   }
 
   void update() {
