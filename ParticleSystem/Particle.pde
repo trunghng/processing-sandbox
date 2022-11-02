@@ -58,24 +58,31 @@ class Particle {
     applyForce(seek);
   }
   
-  void cohesion(ArrayList<Particle> particles) {
-    float cohesionRadius = 200;
+  PVector cohesion(ArrayList<Particle> particles) {
+    float neighborRadius = 50;
     int count = 0;
     PVector sum = new PVector();
     
     for (Particle other : particles) {
       float distance = PVector.dist(this.location, other.location);
-      if (distance > cohesionRadius) {
+      if (distance > neighborRadius && distance > 0) {
         count++;
-        PVector diff = PVector.sub(other.location, this.location);
-        diff.normalize().div(distance);
-        sum.add(diff);
+        sum.add(other.location);
       }
     }
     if (count > 0) {
-      sum.div(count).setMag(this.maxSpeed);
-      steer(sum);
+      sum.div(count);
     }
+    return seek(sum);
+  }
+  
+  void cohesionSeparate(ArrayList<Particle> particles) {
+    PVector cohesion = cohesion(particles);
+    PVector separate = separate(particles);
+    cohesion.mult(1.2);
+    separate.mult(2);
+    applyForce(cohesion);    
+    applyForce(separate);
   }
   
   void applyForce(PVector force) {
@@ -97,9 +104,21 @@ class Particle {
     ellipse(0, 0, radius, radius);
     popMatrix();
   }
+
+  void borders() {
+    if (this.location.x < -this.radius)
+      this.location.x = width + this.radius;
+    if (this.location.y < -this.radius)
+      this.location.y = height + this.radius;
+    if (this.location.x > width + this.radius)
+      this.location.x = -this.radius;
+    if (this.location.y > height + this.radius)
+      this.location.y = -this.radius;
+  }
   
   void run() {
-    update();
-    display();
+    this.update();
+    this.borders();
+    this.display();
   }
 }

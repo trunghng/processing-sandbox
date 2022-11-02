@@ -14,7 +14,8 @@ void draw() {
   PVector mouse = new PVector(mouseX, mouseY);
   
   for (Particle p : particles) {
-    p.seekSeparate(particles, mouse);
+    //p.seekSeparate(particles, mouse);
+    p.cohesionSeparate(particles);
     p.run();
   }
 }
